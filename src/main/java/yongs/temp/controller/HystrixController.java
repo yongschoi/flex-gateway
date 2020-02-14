@@ -76,13 +76,13 @@ public class HystrixController {
 		e2.setId("product02");
 		e2.setName("냉장고");
 		e2.setImage("냉장고.jpg");
-		e2.setPrice("2,300,000");
+		e2.setPrice("2300000");
 		
 		Product e3 = new Product();
 		e3.setId("product03");
 		e3.setName("맛있는 떡");
 		e3.setImage("떡.png");
-		e3.setPrice("5,500");				
+		e3.setPrice("5500");				
 		
         return new ResponseEntity<Flux<Product>>(Flux.just(e1, e2, e3), HttpStatus.OK);
     }
