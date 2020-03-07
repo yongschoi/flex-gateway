@@ -2,11 +2,9 @@ package yongs.temp.config;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.cloud.client.loadbalancer.LoadBalanced;
 import org.springframework.cloud.gateway.filter.GlobalFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.web.client.RestTemplate;
 
 import yongs.temp.filter.JwtGlobalFilter;
 
@@ -30,15 +28,14 @@ public class RouteConfig {
 								 .uri("lb://flex-temp"))
 				.build();
 	}
-*/
+
   
 	@LoadBalanced // @LoadBalanced가 없으면 docker 환경에서 eureka/zipkin call 이 안됨 
     @Bean  
-    public RestTemplate restTemplate() {	
-		/* Connection Pool 방식을 사용하지 않으려면 */
+    public RestTemplate restTemplate() {
 		return new RestTemplate();
     }
-	
+*/	
     @Bean
     public GlobalFilter jwtFilter() {
         return new JwtGlobalFilter();
