@@ -9,6 +9,11 @@ spring:
   profiles: window-dev
   application:
     name: flex-gateway
+  sleuth:
+    sampler:
+      probability: 1
+  zipkin:
+    baseUrl: http://localhost:9411/
   cloud:
     gateway:
       globalcors:
@@ -31,7 +36,7 @@ spring:
         predicates:
         - Path=/todo/**
         filters:
-        # - JwtPreFilter # <-- 서비스 별로 filter 적용
+        # - JwtPreFilter # <-- 서비스 별로 filter 적용할 경우
         - name: Hystrix
           args:
             name: todocmd

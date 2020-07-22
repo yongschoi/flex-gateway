@@ -38,7 +38,7 @@ public class JwtGlobalFilter implements GlobalFilter, Ordered {
     		// 이미지 display인 경우 header가 아닌 query로 token을 체크
     		if(req.getURI().getPath().contains(imagePath)) {
     			authorizationToken = req.getQueryParams().get(ACCESS_TOKEN).get(0);   	
-    			// 기본적으로 header에 있는 token을 체크
+    		// 기본적으로 header에 있는 token을 체크
     		} else {
     			authorizationToken = req.getHeaders().get(ACCESS_TOKEN).get(0);
     		}
