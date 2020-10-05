@@ -29,14 +29,14 @@ spring:
             - PUT
             - DELETE
       # default-filters:
-      # - name: JwtPreFilter # <-- 전체 서비스에 filter 적용
+      # - name: SomePreFilter # <-- 전체 서비스에 filter 적용
       routes:
       - id: flex-todo
         uri: lb://flex-todo
         predicates:
         - Path=/todo/**
         filters:
-        # - JwtPreFilter # <-- 서비스 별로 filter 적용할 경우
+        # - SomePreFilter # <-- 서비스 별로 filter 적용할 경우
         - name: Hystrix
           args:
             name: todocmd
@@ -62,7 +62,15 @@ spring:
             name: productcmd
             # OK처리 : HttpStatus.OK 처리하고 가짜 data를 display
             fallbackUri: forward:/fallback/product   
-                    
+      - id: flex-status
+        uri: lb://flex-status
+        predicates:
+        - Path=/status/**
+      - id: flex-employeestatus
+        uri: lb://flex-employeestatus
+        predicates:
+        - Path=/employeestatus/**
+                                    
 logging:
   level:
     yongs:
@@ -83,4 +91,4 @@ eureka:
 
 # 설정하지 않으면 default 1000ms  
 hystrix.command.todocmd.execution.isolation.thread.timeoutInMilliseconds: 3000
-hystrix.command.employeecmd.execution.isolation.thread.timeoutInMilliseconds: 3000
+hystrix.command.employeecmd.execution.isolation.thread.timeoutInMilliseconds: 10000

@@ -25,7 +25,6 @@ public class JwtGlobalFilter implements GlobalFilter, Ordered {
 	// - 우선순위 높음(HIGHEST_PRECEDENCE: -2147483648)
 	// + 우선순위 낮음(LOWEST_PRECEDENCE:   2147483648)
 	public int getOrder() {
-		// TODO Auto-generated method stub
 		return 1;
 	}
 	
