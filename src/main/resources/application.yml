@@ -92,3 +92,95 @@ eureka:
 # 설정하지 않으면 default 1000ms  
 hystrix.command.todocmd.execution.isolation.thread.timeoutInMilliseconds: 3000
 hystrix.command.employeecmd.execution.isolation.thread.timeoutInMilliseconds: 10000
+
+---
+server:
+  port: 8080
+  
+spring:
+  profiles: container
+  application:
+    name: flex-gateway
+  sleuth:
+    sampler:
+      probability: 1
+  zipkin:
+    baseUrl: http://zipkin:9411/
+  cloud:
+    gateway:
+      globalcors:
+        cors-configurations:
+          '[/**]':
+            allowedOrigins: "*" # vue container 주소
+            allow-credentials: true
+            allowed-headers: "*"
+            allowedMethods:
+            - GET
+            - HEAD
+            - POST
+            - PUT
+            - DELETE
+      # default-filters:
+      # - name: SomePreFilter # <-- 전체 서비스에 filter 적용
+      routes:
+      - id: flex-todo
+        uri: lb://flex-todo
+        predicates:
+        - Path=/todo/**
+        filters:
+        # - SomePreFilter # <-- 서비스 별로 filter 적용할 경우
+        - name: Hystrix
+          args:
+            name: todocmd
+            # ERROR처리 : HttpStatus.REQUEST_TIMEOUT 처리
+            fallbackUri: forward:/fallback/todo     
+      - id: flex-employee
+        uri: lb://flex-employee
+        predicates:
+        - Path=/employee/**
+        filters:
+        - name: Hystrix
+          args:
+            name: employeecmd
+            # OK처리 : HttpStatus.OK 처리하고 가짜 data를 display
+            fallbackUri: forward:/fallback/employee   
+      - id: flex-product
+        uri: lb://flex-product
+        predicates:
+        - Path=/product/**
+        filters:
+        - name: Hystrix
+          args:
+            name: productcmd
+            # OK처리 : HttpStatus.OK 처리하고 가짜 data를 display
+            fallbackUri: forward:/fallback/product   
+      - id: flex-status
+        uri: lb://flex-status
+        predicates:
+        - Path=/status/**
+      - id: flex-employeestatus
+        uri: lb://flex-employeestatus
+        predicates:
+        - Path=/employeestatus/**
+                                    
+logging:
+  level:
+    yongs:
+      temp: INFO
+    com:
+      netflix:
+        eureka: OFF
+        discovery: OFF
+      
+eureka:
+  instance:
+    preferIpAddress: true
+    hostname: eureka
+  client:
+    enabled: true
+    serviceUrl:
+      defaultZone: http://${eureka.instance.hostname}:8761/eureka/   
+
+# 설정하지 않으면 default 1000ms  
+hystrix.command.todocmd.execution.isolation.thread.timeoutInMilliseconds: 3000
+hystrix.command.employeecmd.execution.isolation.thread.timeoutInMilliseconds: 10000
